@@ -354,8 +354,14 @@ class MotionErrorEvaluator(Evaluator):
         rme_trans = dyno_metrics.RME(metrics.PoseRelation.translation_part)
         rme_rot = dyno_metrics.RME(metrics.PoseRelation.rotation_angle_deg)
 
-        rme_trans.process_data(data)
-        rme_rot.process_data(data)
+        try:
+            rme_trans.process_data(data)
+            rme_rot.process_data(data)
+        except trajectory.TrajectoryException as exc:
+            logger.warning(
+                "Skipping object %s local-motion metrics: %s", object_id, exc
+            )
+            return None
 
         results_per_object = {}
         results_per_object["ape_translation"] = rme_trans.get_all_statistics()

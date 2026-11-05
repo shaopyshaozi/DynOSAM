@@ -209,6 +209,7 @@ target_link_libraries(_core
   dynosam_common::dynosam_common
 )
 
+ament_python_install_package(dynosam_nn_py)
 # Install the compiled extension into the Python package folder
 install(
   TARGETS _core
@@ -217,8 +218,6 @@ install(
 
 
 
-#install python scripts/modules
-ament_python_install_package(${PROJECT_NAME}_py)
 
 # so boost components can be found correctly
 # https://robotics.stackexchange.com/questions/93010/ament-export-dependenciesboost-not-working

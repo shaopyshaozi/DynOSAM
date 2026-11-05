@@ -35,25 +35,27 @@ from typing import Tuple, Optional, List, Any, Iterable
 from copy import deepcopy
 import typing
 import math
+import shutil
 
 # Nic Barbara
 def startup_plotting(font_size=14, line_width=1.5, output_dpi=600, tex_backend=True):
     """Edited from https://github.com/nackjaylor/formatting_tips-tricks/
     """
     # plt.rcdefaults()
-    if tex_backend:
-        try:
-            plt.rcParams.update({
-                    "text.usetex": True,
-                    "font.family": "serif",
-                    "font.serif": ["Computer Modern Roman"],
-                    "text.latex.unicode": True
-                    })
-        except:
+    if tex_backend and shutil.which("latex"):
+        plt.rcParams.update({
+                "text.usetex": True,
+                "font.family": "serif",
+                "font.serif": ["Computer Modern Roman"],
+                })
+    else:
+        if tex_backend:
             print("WARNING: LaTeX backend not configured properly. Not using.")
-            plt.rcParams.update({"font.family": "serif",
-                    "font.serif": ["Computer Modern Roman"],
-                        })
+        plt.rcParams.update({
+                "text.usetex": False,
+                "font.family": "serif",
+                "font.serif": ["Computer Modern Roman"],
+                })
 
     # Default settings
     plt.rcParams.update({

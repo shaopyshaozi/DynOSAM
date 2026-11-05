@@ -80,3 +80,48 @@ source /home/user/dev_ws/install/setup.bash
 
 cd /home/user/dev_ws
 
+# Only needed when you edited any source .py/.cpp/.yaml file:
+colcon build --packages-select dynosam_utils
+source install/setup.bash
+
+# Avoid interactive Matplotlib windows during analysis
+export MPLBACKEND=Agg
+
+# OFFLINE dataset KITTI frontend only testing with supplied masks
+time ros2 run dynosam_utils eval_launch.py \
+  --dataset_path /root/data/kitti-0004 \
+  --params_path /home/user/dev_ws/src/core/dynosam/params_kitti_eval/ \
+  --output_path /root/results/DynoSAM \
+  --name kitti_0004_frontend \
+  --run_pipeline \
+  --data_provider_type=0 \
+  --use_backend=false \
+  --use_dynamic_track=true \
+  --use_frontend_logger=true \
+  --use_opencv_display=true
+
+# Evaluation, create pdf trajectory
+ros2 run dynosam_utils eval_launch.py \
+  --output_path /root/results/DynoSAM \
+  --name kitti_0004_frontend \
+  --run_analysis
+
+# OFFLINE dataset KITTI frontend only with YOLO processed masks and first 100 frames
+time ros2 run dynosam_utils eval_launch.py \
+  --dataset_path /root/data/kitti-0004 \
+  --params_path /home/user/dev_ws/src/core/dynosam/params_kitti_yolo_test/ \
+  --output_path /root/results/DynoSAM \
+  --name kitti_0004_yolo_first100 \
+  --run_pipeline \
+  --data_provider_type=0 \
+  --ending_frame=100 \
+  --use_backend=false \
+  --use_dynamic_track=true \
+  --use_frontend_logger=true \
+  --use_opencv_display=true
+
+# Evaluation, create pdf trajectory
+ros2 run dynosam_utils eval_launch.py \
+  --output_path /root/results/DynoSAM \
+  --name kitti_0004_yolo_first100 \
+  --run_analysis
